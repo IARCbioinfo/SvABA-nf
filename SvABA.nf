@@ -70,50 +70,32 @@ assert (params.dbsnp != null) : "please provide the --dbsnp option"
 
 
 correspondance = file(params.correspondance)
-bams= Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
+bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
 		.map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor),file(params.input_folder + "/" +row.normal )]}
 
 
 
 process SVaBa {
 		 cpus params.cpu
+     memory params.mem+'G'
+     tag { bam_tag }
 
+     publishDir '${params.output_folder}', mode: 'copy'
 
-input :
+     input :
+     set val(sampleID),file(tumor),file(normal) from bams
 
-   set val(sampleID),file(tumor),file(normal) from bams
+     output:
+     file '${sampleID}*.vcf' into vcf
+     file '${sampleID}.alignments.txt.gz' into alignments
 
-   output:
-	publishDir '${params.output_folder}', mode: 'copy', pattern: '{*.bps.txt.gz,*.contigs.bam,*.discordants.txt.gz,*.log,*.alignments.txt.gz,*.vcf}'
-shell :
-
-
-     """
-     cd ${params.input_folder}
-    ${params.svaba} run -t $tumor -n $normal -p ${task.cpus} -D ${params.dbsnp_file} -a somatic_run -G ${params.ref_file} -M 40000
-
-mkdir ${params.output_folder}/${sampleID}
-
-mv somatic_run.bps.txt.gz  ${params.output_folder}/${sampleID}/${sampleID}.somatic.bps.txt.gz
-mv somatic_run.contigs.bam  ${params.output_folder}/${sampleID}/${sampleID}.somatic.contigs.bam
-mv somatic_run.discordant.txt.gz ${params.output_folder}/${sampleID}/${sampleID}.discordant.txt.gz
-mv somatic_run.log ${params.output_folder}/${sampleID}/${sampleID}.log
-mv somatic_run.alignments.txt.gz ${params.output_folder}/${sampleID}/${sampleID}.alignments.txt.gz
-
-mv somatic_run.svaba.somatic.sv.vcf        ${params.output_folder}/${sampleID}/${sampleID}.somatic.sv.vcf
-mv somatic_run.svaba.unfiltered.somatic.sv.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.somatic.sv.vcf
-
-
-mv somatic_run.svaba.germline.indel.vcf  ${params.output_folder}/${sampleID}/${sampleID}.germline.indel.vcf
-mv somatic_run.svaba.unfiltered.germline.indel.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.germline.indel.vcf
-
-
-mv somatic_run.svaba.germline.sv.vcf    ${params.output_folder}/${sampleID}/${sampleID}.germline.sv.vcf
-mv somatic_run.svaba.unfiltered.germline.sv.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.germline.sv.vcf
-
-
-
-mv somatic_run.svaba.somatic.indel.vcf   ${params.output_folder}/${sampleID}/${sampleID}.somatic.indel.vcf
-mv somatic_run.svaba.unfiltered.somatic.indel.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.somatic.indel.vcf
-    """
+     shell :
+     '''
+     ${params.svaba} run -t $tumor -n $normal -p ${params.cpu} -D ${params.dbsnp} -a somatic_run -G ${params.ref} -M ${params.mem}0000
+     mv somatic_run.alignments.txt.gz ${sampleID}.alignments.txt.gz
+     mv somatic_run.svaba.somatic.sv.vcf ${sampleID}/${sampleID}.somatic.sv.vcf
+     mv somatic_run.svaba.somatic.indel.vcf ${sampleID}.somatic.indel.vcf
+     mv somatic_run.svaba.germline.indel.vcf ${sampleID}.germline.indel.vcf
+     mv somatic_run.svaba.germline.sv.vcf ${sampleID}.germline.sv.vcf
+     '''
 }

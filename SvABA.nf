@@ -16,11 +16,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-params.help          		 = null
-params.config         		= null
-params.cpu            		= 8
-params.mem           		 = 32
-
+params.help = null
+params.config	= null
+params.cpu = 1
+params.mem = 4
+params.svaba = "svaba"
+params.input_folder = null
+params.correspondance = null
+params.ref = null
+pramas.dbsnp = null
 
 log.info ""
 log.info "----------------------------------------------------------------"
@@ -37,27 +41,33 @@ if (params.help) {
     log.info "--------------------------------------------------------"
     log.info ""
     log.info "-------------------SvABA-------------------------------"
-    log.info "" 
+    log.info ""
     log.info "nextflow run SvABA.nf  --input_folder  path/to/input/ --svaba path/to/svaba/ --ref_file path/to/ref/ --dbsnp_file path/to/dbsnp_indel.vcf --output_folder /path/to/output"
     log.info ""
     log.info "Mandatory arguments:"
-    log.info "--svaba                PATH                SvABA installation dir"
-    log.info "--input_folder         PATH              Folder containing  bam files"
-    log.info "--correspondance       FILE              File containing correspondence between path to normal and path to tumor bams for each patient  "
-    log.info "--ref_file             PATH                Path to  reference fasta file, the reference file should be indexed "
-    log.info "--dbsnp_file           FILE                DbSNP file https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
-    log.info "--output_folder				 PATH				 Path to output folder"
+    log.info "--input_folder         PATH        Folder containing  bam files"
+    log.info "--correspondance       FILE        File containing correspondence between path to normal and path to tumor bams for each patient  "
+    log.info "--ref                  PATH        Path to reference fasta file (should be indexed) "
+    log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
     log.info ""
     log.info "Optional arguments:"
-    log.info "--cpu                  INTEGER              Number of cpu to use (default=8)"
-    log.info "--config               FILE                 Use custom configuration file"
-    log.info "--mem                  INTEGER              Size of memory used. Default 32Gb"
+    log.info "--cpu                  INTEGER     Number of cpu to use (default=1)"
+    log.info "--config               FILE        Use custom configuration file"
+    log.info "--mem                  INTEGER     Size of memory used in GB (default=4)"
+    log.info "--output_folder				 PATH				 Path to output folder (default=.)"
+    log.info "--svaba                PATH        SvABA installation dir (default=svaba)"
     log.info ""
     log.info "Flags:"
-    log.info "--help                                      Display this message"
+    log.info "--help                             Display this message"
     log.info ""
-    exit 1
-} 
+    exit 0
+}
+
+assert (params.input_folder != null) : "please provide the --input_folder option"
+assert (params.correspondance != null) : "please provide the --correspondance option"
+assert (params.ref != null) : "please provide the --ref option"
+assert (params.dbsnp != null) : "please provide the --dbsnp option"
+
 
 correspondance = file(params.correspondance)
 bams= Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
@@ -67,18 +77,18 @@ bams= Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: 
 
 process SVaBa {
 		 cpus params.cpu
-    
+
 
 input :
 
    set val(sampleID),file(tumor),file(normal) from bams
-   
+
    output:
-	publishDir '${params.output_folder}', mode: 'copy', pattern: '{*.bps.txt.gz,*.contigs.bam,*.discordants.txt.gz,*.log,*.alignments.txt.gz,*.vcf}' 
+	publishDir '${params.output_folder}', mode: 'copy', pattern: '{*.bps.txt.gz,*.contigs.bam,*.discordants.txt.gz,*.log,*.alignments.txt.gz,*.vcf}'
 shell :
 
 
-     """ 
+     """
      cd ${params.input_folder}
     ${params.svaba} run -t $tumor -n $normal -p ${task.cpus} -D ${params.dbsnp_file} -a somatic_run -G ${params.ref_file} -M 40000
 
@@ -90,19 +100,19 @@ mv somatic_run.discordant.txt.gz ${params.output_folder}/${sampleID}/${sampleID}
 mv somatic_run.log ${params.output_folder}/${sampleID}/${sampleID}.log
 mv somatic_run.alignments.txt.gz ${params.output_folder}/${sampleID}/${sampleID}.alignments.txt.gz
 
-mv somatic_run.svaba.somatic.sv.vcf        ${params.output_folder}/${sampleID}/${sampleID}.somatic.sv.vcf         
+mv somatic_run.svaba.somatic.sv.vcf        ${params.output_folder}/${sampleID}/${sampleID}.somatic.sv.vcf
 mv somatic_run.svaba.unfiltered.somatic.sv.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.somatic.sv.vcf
-         
- 
+
+
 mv somatic_run.svaba.germline.indel.vcf  ${params.output_folder}/${sampleID}/${sampleID}.germline.indel.vcf
 mv somatic_run.svaba.unfiltered.germline.indel.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.germline.indel.vcf
-     
-               
+
+
 mv somatic_run.svaba.germline.sv.vcf    ${params.output_folder}/${sampleID}/${sampleID}.germline.sv.vcf
 mv somatic_run.svaba.unfiltered.germline.sv.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.germline.sv.vcf
-  
-    
-   
+
+
+
 mv somatic_run.svaba.somatic.indel.vcf   ${params.output_folder}/${sampleID}/${sampleID}.somatic.indel.vcf
 mv somatic_run.svaba.unfiltered.somatic.indel.vcf ${params.output_folder}/${sampleID}/${sampleID}.unfiltered.somatic.indel.vcf
     """

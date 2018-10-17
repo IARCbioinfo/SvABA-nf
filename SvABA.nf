@@ -28,7 +28,7 @@ pramas.dbsnp = null
 
 log.info ""
 log.info "----------------------------------------------------------------"
-log.info "        svaba/  : Structural variants calling with SvABA        "
+log.info "        vaba/  : Structural variants calling with SvABA        "
 log.info "----------------------------------------------------------------"
 log.info "Copyright (C) IARC/WHO"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
@@ -42,7 +42,7 @@ if (params.help) {
     log.info ""
     log.info "-------------------SvABA-------------------------------"
     log.info ""
-    log.info "nextflow run SvABA.nf  --input_folder  path/to/input/ --svaba path/to/svaba/ --ref_file path/to/ref/ --dbsnp_file path/to/dbsnp_indel.vcf --output_folder /path/to/output"
+    log.info "nextflow run SvABA.nf --input_folder path/to/input/ --ref path/to/ref/ --dbsnp path/to/dbsnp_indel.vcf --correspondance corr.txt"
     log.info ""
     log.info "Mandatory arguments:"
     log.info "--input_folder         PATH        Folder containing  bam files"

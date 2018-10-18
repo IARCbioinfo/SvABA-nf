@@ -71,9 +71,7 @@ assert (params.dbsnp != null) : "please provide the --dbsnp option"
 
 correspondance = file(params.correspondance)
 bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
-		.map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor),file(params.input_folder + "/" +row.normal )]}
-
-
+                .map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor),file(params.input_folder + "/" +row.normal )]}
 
 process svaba {
 		 cpus params.cpu
@@ -91,11 +89,11 @@ process svaba {
 
      shell :
      '''
-     ${params.svaba} run -t $tumor -n $normal -p ${params.cpu} -D ${params.dbsnp} -a somatic_run -G ${params.ref} -M ${params.mem}0000
-     mv somatic_run.alignments.txt.gz ${sampleID}.alignments.txt.gz
-     mv somatic_run.svaba.somatic.sv.vcf ${sampleID}/${sampleID}.somatic.sv.vcf
-     mv somatic_run.svaba.somatic.indel.vcf ${sampleID}.somatic.indel.vcf
-     mv somatic_run.svaba.germline.indel.vcf ${sampleID}.germline.indel.vcf
-     mv somatic_run.svaba.germline.sv.vcf ${sampleID}.germline.sv.vcf
+     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} -D !{params.dbsnp} -a somatic_run -G !{params.ref}
+     mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
+     mv somatic_run.svaba.somatic.sv.vcf !{sampleID}/!{sampleID}.somatic.sv.vcf
+     mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf
+     mv somatic_run.svaba.germline.indel.vcf !{sampleID}.germline.indel.vcf
+     mv somatic_run.svaba.germline.sv.vcf !{sampleID}.germline.sv.vcf
      '''
 }

@@ -24,7 +24,7 @@ params.svaba = "svaba"
 params.input_folder = null
 params.correspondance = null
 params.ref = null
-pramas.dbsnp = null
+params.dbsnp = null
 
 log.info ""
 log.info "----------------------------------------------------------------"

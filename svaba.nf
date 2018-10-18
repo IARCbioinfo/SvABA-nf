@@ -24,7 +24,7 @@ params.svaba = "svaba"
 params.input_folder = null
 params.correspondance = null
 params.ref = null
-params.dbsnp = null
+params.dbsnp = ""
 
 log.info ""
 log.info "----------------------------------------------------------------"
@@ -48,7 +48,6 @@ if (params.help) {
     log.info "--input_folder         PATH        Folder containing  bam files"
     log.info "--correspondance       FILE        File containing correspondence between path to normal and path to tumor bams for each patient  "
     log.info "--ref                  PATH        Path to reference fasta file (should be indexed) "
-    log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
     log.info ""
     log.info "Optional arguments:"
     log.info "--cpu                  INTEGER     Number of cpu to use (default=1)"
@@ -56,6 +55,7 @@ if (params.help) {
     log.info "--mem                  INTEGER     Size of memory used in GB (default=4)"
     log.info "--output_folder				 PATH				 Path to output folder (default=.)"
     log.info "--svaba                PATH        SvABA installation dir (default=svaba)"
+    log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
     log.info ""
     log.info "Flags:"
     log.info "--help                             Display this message"
@@ -66,17 +66,17 @@ if (params.help) {
 assert (params.input_folder != null) : "please provide the --input_folder option"
 assert (params.correspondance != null) : "please provide the --correspondance option"
 assert (params.ref != null) : "please provide the --ref option"
-assert (params.dbsnp != null) : "please provide the --dbsnp option"
-
 
 correspondance = file(params.correspondance)
 bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
                 .map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor),file(params.input_folder + "/" +row.normal )]}
 
+if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
+
 process svaba {
 		 cpus params.cpu
      memory params.mem+'G'
-     tag { bam_tag }
+     tag { sampleID }
 
      publishDir '${params.output_folder}', mode: 'copy'
 
@@ -89,7 +89,7 @@ process svaba {
 
      shell :
      '''
-     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} -D !{params.dbsnp} -a somatic_run -G !{params.ref}
+     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{params.ref}
      mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
      mv somatic_run.svaba.somatic.sv.vcf !{sampleID}/!{sampleID}.somatic.sv.vcf
      mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf

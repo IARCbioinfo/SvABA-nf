@@ -73,6 +73,8 @@ bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip:
 
 if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
 
+fasta_ref = file(params.ref)
+
 process svaba {
 		 cpus params.cpu
      memory params.mem+'G'
@@ -89,7 +91,7 @@ process svaba {
 
      shell :
      '''
-     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{params.ref}
+     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref}
      mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
      mv somatic_run.svaba.somatic.sv.vcf !{sampleID}/!{sampleID}.somatic.sv.vcf
      mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf

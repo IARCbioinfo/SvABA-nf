@@ -30,7 +30,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
   make install && \
 
 	# export executable to PATH
-	cp bin/svaba /usr/bin/
+	cp bin/svaba /usr/bin/ && \
 
   # Clean
   DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && \

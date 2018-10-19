@@ -69,7 +69,8 @@ assert (params.ref != null) : "please provide the --ref option"
 
 correspondance = file(params.correspondance)
 bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip: true)
-                .map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor),file(params.input_folder + "/" +row.normal )]}
+                .map{row -> [ row.ID, file(params.input_folder + "/" +row.tumor), file(params.input_folder + "/" +row.tumor+'.bai'),
+                              file(params.input_folder + "/" +row.normal), file(params.input_folder + "/" +row.normal+'.bai')]}
 
 if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
 
@@ -80,20 +81,20 @@ process svaba {
      memory params.mem+'G'
      tag { sampleID }
 
-     publishDir '${params.output_folder}', mode: 'copy'
+     publishDir params.output_folder, mode: 'copy'
 
      input :
-     set val(sampleID),file(tumor),file(normal) from bams
+     set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams
 
      output:
-     file '${sampleID}*.vcf' into vcf
-     file '${sampleID}.alignments.txt.gz' into alignments
+     file "${sampleID}*.vcf" into vcf
+     file "${sampleID}.alignments.txt.gz" into alignments
 
      shell :
      '''
-     !{params.svaba} run -t !{tumor} -n !{normal} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref}
+     !{params.svaba} run -t !{tumorBam} -n !{normalBam} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref}
      mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
-     mv somatic_run.svaba.somatic.sv.vcf !{sampleID}/!{sampleID}.somatic.sv.vcf
+     mv somatic_run.svaba.somatic.sv.vcf !{sampleID}.somatic.sv.vcf
      mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf
      mv somatic_run.svaba.germline.indel.vcf !{sampleID}.germline.indel.vcf
      mv somatic_run.svaba.germline.sv.vcf !{sampleID}.germline.sv.vcf

@@ -1,45 +1,36 @@
-# Set the base image to Debian
-FROM debian:9.0
+################## BASE IMAGE ######################
+FROM nfcore/base
 
-# File Author / Maintainer
-MAINTAINER **lboukilii** <**lboukilii@students.iarc.fr**>
+################## METADATA ######################
 
-RUN mkdir -p /var/cache/apt/archives/partial && \
-	touch /var/cache/apt/archives/lock && \
-	chmod 640 /var/cache/apt/archives/lock && \
-	apt-get update -y &&\
-	apt-get install -y gnupg2
-	
-RUN	apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F76221572C52609D && \
-	apt-get clean && \
-	apt-get update -y && \
+LABEL base_image="nfcore/base"
+LABEL version="1.0"
+LABEL software="svaba-nf"
+LABEL software.version="1.0"
+LABEL about.summary="Container image containing all requirements for svaba-nf"
+LABEL about.home="http://github.com/IARCbioinfo/svaba-nf"
+LABEL about.documentation="http://github.com/IARCbioinfo/svaba-nf/README.md"
+LABEL about.license_file="http://github.com/IARCbioinfo/svaba-nf/LICENSE.txt"
+LABEL about.license="GNU-3.0"
 
+################## MAINTAINER ######################
+MAINTAINER Tiffany Delhomme <delhommet@students.iarc.fr>
 
-  # Install dependences
-  DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-  make \
-  make install 
-  ./configure \
-  g++ \
-  git \
+################## INSTALLATION ######################
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+  build-essential \
+	zlib1g-dev && \
 
-  
-  # Install SvABA
- 	git clone --recursive https://github.com/walaj/svaba
-	cd svaba
-	./configure
-	make
-	make install
-  
+	# install svaba from github repository
+	git clone --recursive https://github.com/walaj/svaba && \
+	cd svaba && \
+  ./configure && \
+	make && \
+  make install && \
 
-
-  # Remove unnecessary dependences
-  DEBIAN_FRONTEND=noninteractive apt-get remove -y \
-  make \
-  g++ \
-  git \
-
+	# export executable to PATH
+	cp bin/svaba /usr/bin/
 
   # Clean
   DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && \

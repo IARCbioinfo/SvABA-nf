@@ -18,20 +18,20 @@ MAINTAINER Tiffany Delhomme <delhommet@students.iarc.fr>
 
 ################## INSTALLATION ######################
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-  build-essential \
+RUN apt-get install --no-install-recommends -y \
+	build-essential \
 	zlib1g-dev && \
 
 	# install svaba from github repository
 	git clone --recursive https://github.com/walaj/svaba && \
 	cd svaba && \
-  ./configure && \
+	./configure && \
 	make && \
-  make install && \
+	make install && \
 
 	# export executable to PATH
 	cp bin/svaba /usr/bin/ && \
 
-  # Clean
-  DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && \
-  apt-get clean
+	# Clean
+	DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && \
+	apt-get clean

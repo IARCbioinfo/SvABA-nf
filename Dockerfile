@@ -18,7 +18,7 @@ MAINTAINER Tiffany Delhomme <delhommet@students.iarc.fr>
 
 ################## INSTALLATION ######################
 
-RUN apt-get install --no-install-recommends -y \
+RUN DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
 	build-essential \
 	zlib1g-dev && \
 

@@ -4,7 +4,7 @@
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/iarcbioinfo/svaba-nf/)
 [![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1818)
 
-![Image SvABA](https://github.com/ImaneLboukili/WGS_analysis/blob/master/SvABA/SvABA.png)
+![Image SvABA](https://github.com/IARCbioinfo/svaba-nf/blob/master/svaba.png)
 
 ## Description ##
 

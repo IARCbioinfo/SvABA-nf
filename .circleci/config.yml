@@ -6,6 +6,7 @@ jobs:
       steps:
         - checkout
         - run: wget -qO- get.nextflow.io | bash ; chmod 755 nextflow ; sudo mv ~/project/nextflow /usr/local/bin/ ; sudo apt-get install graphviz
+        - run: cd ~ && git clone --depth=1 https://github.com/IARCbioinfo/data_test.git
         - run: echo " docker.runOptions = '-u $(id -u):$(id -g)' " > ~/.nextflow/config
         - run: cd ~/project/ ; docker build -t iarcbioinfo/svaba-nf .
         - run: cd ; nextflow run ~/project/svaba.nf --help

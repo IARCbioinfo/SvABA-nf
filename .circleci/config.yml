@@ -11,7 +11,7 @@ jobs:
         - run: cd ~/project/ ; docker build -t iarcbioinfo/svaba-nf .
         - run: cd ; nextflow run ~/project/svaba.nf --help
         - run: cd ; nextflow run ~/project/svaba.nf -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt
-        - run: cd ; mv ~/results/nf-pipeline_info/svaba_dag.html ~/project/
+        - run: cd ; mv ~/nf-pipeline_info/svaba_dag.html ~/project/
         - deploy:
             branch: [dev, master]
             command: chmod +x deploy.sh && ./deploy.sh

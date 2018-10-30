@@ -1,4 +1,5 @@
-# Structural variant calling #
+# svaba-nf
+## Structural variant calling 
 
 [![CircleCI](https://circleci.com/gh/IARCbioinfo/svaba-nf.svg?style=svg)](https://circleci.com/gh/IARCbioinfo/svaba-nf)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/iarcbioinfo/svaba-nf/)

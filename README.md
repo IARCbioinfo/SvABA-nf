@@ -20,7 +20,7 @@ Perform structural variant calling with SvABA.
 **Name**          | **Description**
 ----------------- | ---------------
 --input_folder    |  Folder containing normal (.normal.bam) and tumor (.tumor.bam) BAM files
---ref_file        |  Path to reference fasta file. It should be indexed
+--ref             |  Path to reference fasta file. It should be indexed
 --correspondance  |  A correspondance file, with columns `ID`, `tumor`, and `normal` specifying the name of the sample and the tumor/normal file names in the input folder
 --dbsnp_file      |  DbSNP file, available [here](https://data.broadinstitute.org/snowman/dbsnp_indel.vcf)
 --output_folder   |  Path to output folder

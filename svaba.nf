@@ -75,6 +75,7 @@ bams = Channel.fromPath(correspondance).splitCsv(header: true, sep: '\t', strip:
 if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
 
 fasta_ref = file(params.ref)
+fasta_ref_fai = file( params.ref+'.fai' )
 
 process svaba {
 		 cpus params.cpu
@@ -85,6 +86,8 @@ process svaba {
 
      input :
      set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams
+     file fasta_ref
+     file fasta_ref_fai
 
      output:
      file "${sampleID}*.vcf" into vcf

@@ -23,7 +23,8 @@ RUN apt-get clean && \
 	DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
 	build-essential \
 	zlib1g-dev \
-	libbz2-dev && \
+	libbz2-dev \
+	liblzma-dev && \
 
 	# install svaba from github repository
 	git clone --recursive https://github.com/walaj/svaba && \

@@ -94,12 +94,12 @@ process svaba {
      set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams
      file fasta_ref
      file fasta_ref_fai
-     file fasta_ref_sa = file( params.ref+'.sa' )
-     file fasta_ref_bwt = file( params.ref+'.bwt' )
-     file fasta_ref_ann = file( params.ref+'.ann' )
-     file fasta_ref_amb = file( params.ref+'.amb' )
-     file fasta_ref_pac = file( params.ref+'.pac' )
-     file fasta_ref_alt = file( params.ref+'.alt' )
+     file fasta_ref_sa
+     file fasta_ref_bwt
+     file fasta_ref_ann
+     file fasta_ref_amb
+     file fasta_ref_pac
+     file fasta_ref_alt
 
      output:
      file "${sampleID}*.vcf" into vcf

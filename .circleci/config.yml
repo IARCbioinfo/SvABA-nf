@@ -10,7 +10,7 @@ jobs:
         - run: echo " docker.runOptions = '-u $(id -u):$(id -g)' " > ~/.nextflow/config
         - run: cd ~/project/ ; docker build -t iarcbioinfo/svaba-nf .
         - run: cd ; nextflow run ~/project/svaba.nf --help
-        - run: cd ; nextflow run ~/project/svaba.nf -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options "--override-reference-check"
+        - run: cd ; nextflow run ~/project/svaba.nf -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options '--override-reference-check'
         - run: cd ; mv ~/nf-pipeline_info/svaba_dag.html ~/project/
         - deploy:
             branch: [dev, master]

@@ -76,6 +76,12 @@ if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
 
 fasta_ref = file(params.ref)
 fasta_ref_fai = file( params.ref+'.fai' )
+fasta_ref_sa = file( params.ref+'.sa' )
+fasta_ref_bwt = file( params.ref+'.bwt' )
+fasta_ref_ann = file( params.ref+'.ann' )
+fasta_ref_amb = file( params.ref+'.amb' )
+fasta_ref_pac = file( params.ref+'.pac' )
+fasta_ref_alt = file( params.ref+'.alt' )
 
 process svaba {
 		 cpus params.cpu
@@ -88,6 +94,12 @@ process svaba {
      set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams
      file fasta_ref
      file fasta_ref_fai
+     file fasta_ref_sa = file( params.ref+'.sa' )
+     file fasta_ref_bwt = file( params.ref+'.bwt' )
+     file fasta_ref_ann = file( params.ref+'.ann' )
+     file fasta_ref_amb = file( params.ref+'.amb' )
+     file fasta_ref_pac = file( params.ref+'.pac' )
+     file fasta_ref_alt = file( params.ref+'.alt' )
 
      output:
      file "${sampleID}*.vcf" into vcf

@@ -25,6 +25,7 @@ params.input_folder = null
 params.correspondance = null
 params.ref = null
 params.dbsnp = ""
+params.options = ""
 
 log.info ""
 log.info "----------------------------------------------------------------"
@@ -56,6 +57,7 @@ if (params.help) {
     log.info "--output_folder				 PATH				 Path to output folder (default=.)"
     log.info "--svaba                PATH        SvABA installation dir (default=svaba)"
     log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
+    log.info "--options              STRING      List of options to pass to svaba"
     log.info ""
     log.info "Flags:"
     log.info "--help                             Display this message"
@@ -76,6 +78,12 @@ if (params.dbsnp == "") { dbsnp_par="" } else { dbsnp_par="-D" }
 
 fasta_ref = file(params.ref)
 fasta_ref_fai = file( params.ref+'.fai' )
+fasta_ref_sa = file( params.ref+'.sa' )
+fasta_ref_bwt = file( params.ref+'.bwt' )
+fasta_ref_ann = file( params.ref+'.ann' )
+fasta_ref_amb = file( params.ref+'.amb' )
+fasta_ref_pac = file( params.ref+'.pac' )
+fasta_ref_alt = file( params.ref+'.alt' )
 
 process svaba {
 		 cpus params.cpu
@@ -88,6 +96,12 @@ process svaba {
      set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams
      file fasta_ref
      file fasta_ref_fai
+     file fasta_ref_sa
+     file fasta_ref_bwt
+     file fasta_ref_ann
+     file fasta_ref_amb
+     file fasta_ref_pac
+     file fasta_ref_alt
 
      output:
      file "${sampleID}*.vcf" into vcf
@@ -95,7 +109,7 @@ process svaba {
 
      shell :
      '''
-     !{params.svaba} run -t !{tumorBam} -n !{normalBam} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref}
+     !{params.svaba} run -t !{tumorBam} -n !{normalBam} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref} !{params.options}
      mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
      mv somatic_run.svaba.somatic.sv.vcf !{sampleID}.somatic.sv.vcf
      mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf

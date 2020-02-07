@@ -17,16 +17,17 @@
 
 
 params.help = null
-params.config	= null
+//params.config	= null
 params.cpu = 1
 params.mem = 4
 params.input_folder = null
+params.output_folder = "."
 params.correspondance = null
 params.ref = null
 params.dbsnp = ""
 params.options = ""
 params.targets = null
-params.twopass = null
+//params.twopass = null
 
 log.info ""
 log.info "----------------------------------------------------------------"
@@ -53,9 +54,9 @@ if (params.help) {
     log.info ""
     log.info "Optional arguments:"
     log.info "--cpu                  INTEGER     Number of cpu to use (default=1)"
-    log.info "--config               FILE        Use custom configuration file"
+    //log.info "--config               FILE        Use custom configuration file"
     log.info "--mem                  INTEGER     Size of memory used in GB (default=4)"
-    log.info "--output_folder				 PATH				 Path to output folder (default=.)"
+    log.info "--output_folder		  PATH				 Path to output folder (default=.)"
     log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
     log.info "--targets              FILE        bed file with target positions"
     log.info "--options              STRING      List of options to pass to svaba"

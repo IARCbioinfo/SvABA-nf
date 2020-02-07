@@ -20,12 +20,13 @@ params.help = null
 params.config	= null
 params.cpu = 1
 params.mem = 4
-params.svaba = "svaba"
 params.input_folder = null
 params.correspondance = null
 params.ref = null
 params.dbsnp = ""
 params.options = ""
+params.targets = null
+params.twopass = null
 
 log.info ""
 log.info "----------------------------------------------------------------"
@@ -55,8 +56,8 @@ if (params.help) {
     log.info "--config               FILE        Use custom configuration file"
     log.info "--mem                  INTEGER     Size of memory used in GB (default=4)"
     log.info "--output_folder				 PATH				 Path to output folder (default=.)"
-    log.info "--svaba                PATH        SvABA installation dir (default=svaba)"
     log.info "--dbsnp                FILE        dbSNP file available at: https://data.broadinstitute.org/snowman/dbsnp_indel.vcf"
+    log.info "--targets              FILE        bed file with target positions"
     log.info "--options              STRING      List of options to pass to svaba"
     log.info ""
     log.info "Flags:"
@@ -86,7 +87,7 @@ fasta_ref_pac = file( params.ref+'.pac' )
 fasta_ref_alt = file( params.ref+'.alt' )
 
 process svaba {
-		 cpus params.cpu
+	cpus params.cpu
      memory params.mem+'G'
      tag { sampleID }
 
@@ -104,16 +105,58 @@ process svaba {
      file fasta_ref_alt
 
      output:
-     file "${sampleID}*.vcf" into vcf
+     set val(sampleID), file("${sampleID}*.vcf") into vcf
      file "${sampleID}.alignments.txt.gz" into alignments
 
      shell :
+     if(params.targets) targets="-k ${params.targets}"
+     else targets=""
+     if(normalBam.baseName == 'None' ) normal=""
+     else  normal="-n ${normalBam}"
      '''
-     !{params.svaba} run -t !{tumorBam} -n !{normalBam} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref} !{params.options}
+     svaba run -t !{tumorBam} !{normal} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref} !{targets} !{params.options}
      mv somatic_run.alignments.txt.gz !{sampleID}.alignments.txt.gz
-     mv somatic_run.svaba.somatic.sv.vcf !{sampleID}.somatic.sv.vcf
-     mv somatic_run.svaba.somatic.indel.vcf !{sampleID}.somatic.indel.vcf
-     mv somatic_run.svaba.germline.indel.vcf !{sampleID}.germline.indel.vcf
-     mv somatic_run.svaba.germline.sv.vcf !{sampleID}.germline.sv.vcf
+     for f in `ls *.vcf`; do mv $f !{sampleID}.$f; done
      '''
 }
+
+
+/*
+process secondpass_svaba {
+     cpus params.cpu
+     memory params.mem+'G'
+     tag { sampleID }
+
+     publishDir params.output_folder, mode: 'copy'
+
+     when:
+     twopass!=null
+
+     input :
+     set val(sampleID),file(tumorBam),file(tumorBai),file(normalBam),file(normalBai) from bams2ndpass
+     file fasta_ref
+     file fasta_ref_fai
+     file fasta_ref_sa
+     file fasta_ref_bwt
+     file fasta_ref_ann
+     file fasta_ref_amb
+     file fasta_ref_pac
+     file fasta_ref_alt
+     
+
+     output:
+     file "${sampleID}_2ndpass*.vcf" into vcf_2ndpass
+     file "${sampleID}_2ndpass.alignments.txt.gz" into alignments_2ndpass
+
+     shell :
+     '''
+     !{baseDir}/bin/prep_vcf_bed.sh
+     svaba run -t !{tumorBam} -n !{normalBam} -p !{params.cpu} !{dbsnp_par} !{params.dbsnp} -a somatic_run -G !{fasta_ref} -k regions.bed !{params.options} -L 1 
+     mv somatic_run.alignments.txt.gz !{sampleID}_2ndpass.alignments.txt.gz
+     mv somatic_run.svaba.somatic.sv.vcf !{sampleID}_2ndpass.somatic.sv.vcf
+     mv somatic_run.svaba.somatic.indel.vcf !{sampleID}_2ndpass.somatic.indel.vcf
+     mv somatic_run.svaba.germline.indel.vcf !{sampleID}_2ndpass.germline.indel.vcf
+     mv somatic_run.svaba.germline.sv.vcf !{sampleID}_2ndpass.germline.sv.vcf
+     '''
+}
+*/

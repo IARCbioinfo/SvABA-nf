@@ -17,24 +17,27 @@ Perform structural variant calling with SvABA.
 2. SvABA: see official installation [here](https://github.com/walaj/svaba). 
 ## Input ## 
 
-**Name**          | **Description**
+| Type      | Description     |
 ----------------- | ---------------
 --input_folder    |  Folder containing normal (.normal.bam) and tumor (.tumor.bam) BAM files
---ref             |  Path to reference fasta file. It should be indexed
 --correspondance  |  A correspondance file, with columns `ID`, `tumor`, and `normal` specifying the name of the sample and the tumor/normal file names in the input folder
---dbsnp_file      |  DbSNP file, available [here](https://data.broadinstitute.org/snowman/dbsnp_indel.vcf)
---output_folder   |  Path to output folder
 
-## Parameters ## 
+## Parameters
+  * #### Mandatory
 
-### Optional ###
-**Name**          | **Example value** | **Description**
-------------------| ------------------| ------------------
---svaba           | /usr/bin/svaba    | Path to SvABA installation directory
+| Name      | Example value | Description     |
+----------------- | --------------- | ---------------
+--ref              | ref.fa |  Path to reference fasta file. It should be indexed
 
-### Flags ###
-
-Flags are special parameters without value.
+  * #### Optional
+| Name      | Default value | Description     |
+----------------- | --------------- | ---------------
+--output_folder  | "."  |  Path to output folder
+--dbsnp_file      |  dbsnp_indel.vcf | DbSNP file, e.g. available [here](https://data.broadinstitute.org/snowman/dbsnp_indel.vcf)
+--cpu     | 1 |   Number of cpu to use 
+--mem     | 4 |    Size of memory used in GB 
+--targets      | NULL |         bed file with target positions
+--options | NULL | List of options to pass to svaba
 
 **Name**      | **Description**
 ------------- | -------------
@@ -47,6 +50,9 @@ Flags are special parameters without value.
 ## Usage ##
 
 `nextflow run SvABA.nf  --input_folder  path/to/input/ --svaba path/to/svaba/ --ref_file path/to/ref/ --dbsnp_file path/to/dbsnp_indel.vcf --output_folder /path/to/output` 
+
+### Tumor-only mode ###
+To trigger the Tumor-only mode in some samples, put "None" (with capital N) in the normal column of the corresponding sample.
 
 ## Output ##
 

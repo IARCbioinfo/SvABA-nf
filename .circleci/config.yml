@@ -13,6 +13,9 @@ jobs:
         - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.html
         - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.png -resume
         - run: cd ; cp ~/dag.* ~/project/.
+        - add_ssh_keys:
+                      fingerprints:
+                              - "ee:96:12:b3:06:55:ca:68:07:20:cc:77:75:62:04:f1"
         - deploy:
             branch: [dev, master]
             command: chmod +x deploy.sh && ./deploy.sh

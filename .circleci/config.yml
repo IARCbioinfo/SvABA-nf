@@ -9,9 +9,10 @@ jobs:
         - run: cd ~ && git clone --depth=1 https://github.com/IARCbioinfo/data_test.git
         - run: echo " docker.runOptions = '-u $(id -u):$(id -g)' " > ~/.nextflow/config
         - run: cd ~/project/ ; docker build -t iarcbioinfo/svaba-nf .
-        - run: cd ; nextflow run ~/project/svaba.nf --help
-#        - run: cd ; nextflow run ~/project/svaba.nf -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check "
-#        - run: cd ; mv ~/nf-pipeline_info/svaba_dag.html ~/project/
+        - run: cd ; nextflow run ~/project/ --help
+        - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.html
+        - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.png -resume
+        - run: cd ; mv ~/nf-pipeline_info/dag.html ~/project/
         - deploy:
             branch: [dev, master]
             command: chmod +x deploy.sh && ./deploy.sh

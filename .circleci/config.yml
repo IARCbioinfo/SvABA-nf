@@ -12,7 +12,7 @@ jobs:
         - run: cd ; nextflow run ~/project/ --help
         - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.html
         - run: cd ; nextflow run ~/project/ -with-docker iarcbioinfo/svaba-nf --input_folder ~/data_test/BAM/ --ref ~/data_test/REF/17.fasta --correspondance ~/data_test/correspondance.txt --options " --override-reference-check " -with-dag dag.png -resume
-        - run: cd ; mv ~/nf-pipeline_info/dag.html ~/project/
+        - run: cd ; mv ~/nf-pipeline_info/dag.* ~/project/
         - deploy:
             branch: [dev, master]
             command: chmod +x deploy.sh && ./deploy.sh

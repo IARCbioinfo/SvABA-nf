@@ -2,7 +2,7 @@
 cd ~/project/
 commitID=`git log -n 1 --pretty="%h" -- Dockerfile`
 sed -i '/^# Dockerfile/d' Singularity && echo -e "\n# Dockerfile commit ID: $commitID\n" >> Singularity
-git config --global user.email "delhommet@students.iarc.fr"
+git config --global user.email "alcalan@iarc.fr"
 git config --global user.name "Circle CI_$CIRCLE_PROJECT_REPONAME_$CIRCLE_BRANCH"
 git add .
 git status

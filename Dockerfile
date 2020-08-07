@@ -17,7 +17,10 @@ LABEL about.license="GNU-3.0"
 MAINTAINER Nicolas Alcala <alcalan@iarc.fr>
 
 ################## INSTALLATION ######################
-
+COPY environment.yml /
+RUN apt-get update && apt-get install -y procps && apt-get clean -y
+RUN conda env create -n svaba-nf -f /environment.yml && conda clean -a
+ENV PATH /opt/conda/envs/svaba-nf/bin:$PATH
 RUN apt-get clean && \
 	apt-get update -y && \
 	DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
@@ -25,17 +28,14 @@ RUN apt-get clean && \
 	zlib1g-dev \
 	libbz2-dev \
 	liblzma-dev && \
-
 	# install svaba from github repository
 	git clone --recursive https://github.com/walaj/svaba && \
 	cd svaba && \
 	./configure && \
 	make && \
 	make install && \
-
 	# export executable to PATH
 	cp bin/svaba /usr/bin/ && \
-
 	# Clean
 	DEBIAN_FRONTEND=noninteractive apt-get autoremove -y && \
 	apt-get clean

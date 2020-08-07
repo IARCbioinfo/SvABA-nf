@@ -1,0 +1,7 @@
+name: svaba
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - procps-ng=3.3.16

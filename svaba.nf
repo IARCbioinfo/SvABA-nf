@@ -31,7 +31,7 @@ params.targets = null
 
 log.info ""
 log.info "----------------------------------------------------------------"
-log.info "            Structural variants calling with SvABA              "
+log.info " svaba-nf 1.0 :  Structural variants calling with SvABA         "
 log.info "----------------------------------------------------------------"
 log.info "Copyright (C) IARC/WHO"
 log.info "This program comes with ABSOLUTELY NO WARRANTY; for details see LICENSE"
@@ -45,7 +45,7 @@ if (params.help) {
     log.info ""
     log.info "------------------- svaba-nf----------------------------"
     log.info ""
-    log.info "nextflow run svaba.nf --input_folder path/to/input/ --ref path/to/ref/ --dbsnp path/to/dbsnp_indel.vcf --correspondance corr.txt"
+    log.info "nextflow run IARCbioinfo/svaba-nf -r v1.0 -profile singularity --input_folder path/to/input/ --ref path/to/ref/ --dbsnp path/to/dbsnp_indel.vcf --correspondance corr.txt"
     log.info ""
     log.info "Mandatory arguments:"
     log.info "--input_folder         PATH        Folder containing  bam files"

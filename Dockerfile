@@ -1,10 +1,10 @@
-################## BASE IMAGE ######################
-FROM nfcore/base
+################# BASE IMAGE #####################
+FROM continuumio/miniconda3:4.7.12
 
-################## METADATA ######################
+################## METADATA #######################
 
-LABEL base_image="nfcore/base"
-LABEL version="1.0"
+LABEL base_image="continuumio/miniconda3"
+LABEL version="4.7.12"
 LABEL software="svaba-nf"
 LABEL software.version="1.0"
 LABEL about.summary="Container image containing all requirements for svaba-nf"
@@ -14,7 +14,7 @@ LABEL about.license_file="http://github.com/IARCbioinfo/svaba-nf/LICENSE.txt"
 LABEL about.license="GNU-3.0"
 
 ################## MAINTAINER ######################
-MAINTAINER Tiffany Delhomme <delhommet@students.iarc.fr>
+MAINTAINER Nicolas Alcala <alcalan@iarc.fr>
 
 ################## INSTALLATION ######################
 

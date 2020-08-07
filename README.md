@@ -66,6 +66,9 @@ Logs (.log)                |  Run-time information
 txts (.discordants.txt.gz) |  Discordant reads identified with 2+ reads
 VCFs (.vcf )               |  VCF of rearrangements and indels
 
+## Directed Acyclic Graph
+[![DAG](dag.png)](http://htmlpreview.github.io/?https://github.com/IARCbioinfo/svaba-nf/blob/master/dag.html)
+
 ## Contributions
 
   | Name      | Email | Description     |

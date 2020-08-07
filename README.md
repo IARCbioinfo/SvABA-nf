@@ -49,7 +49,9 @@ Perform structural variant calling with SvABA.
 
 ## Usage ##
 
-`nextflow run SvABA.nf  --input_folder  path/to/input/ --svaba path/to/svaba/ --ref_file path/to/ref/ --dbsnp_file path/to/dbsnp_indel.vcf --output_folder /path/to/output` 
+`nextflow run IARCbioinfo/svaba-nf -r v1.0 -profile singularity--input_folder  path/to/input/ --svaba path/to/svaba/ --ref_file path/to/ref/ --dbsnp_file path/to/dbsnp_indel.vcf --output_folder /path/to/output` 
+
+To run the pipeline without singularity just remove "-profile singularity". Alternatively, one can run the pipeline using a docker container (-profile docker).
 
 ### Tumor-only mode ###
 To trigger the Tumor-only mode in some samples, put "None" (with capital N) in the normal column of the corresponding sample.
@@ -64,3 +66,9 @@ Logs (.log)                |  Run-time information
 txts (.discordants.txt.gz) |  Discordant reads identified with 2+ reads
 VCFs (.vcf )               |  VCF of rearrangements and indels
 
+## Contributions
+
+  | Name      | Email | Description     |
+  |-----------|---------------|-----------------| 
+  | Nicolas Alcala*    | AlcalaN@iarc.fr    | Developer to contact for support |
+  | Tiffany Delhomme    |     DelhommeT@students.iarc.fr | Developer |

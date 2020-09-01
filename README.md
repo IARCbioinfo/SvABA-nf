@@ -3,7 +3,7 @@
 
 [![CircleCI](https://circleci.com/gh/IARCbioinfo/svaba-nf.svg?style=svg)](https://circleci.com/gh/IARCbioinfo/svaba-nf)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/iarcbioinfo/svaba-nf/)
-[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/1818)
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/4720)
 
 ![Image SvABA](https://github.com/IARCbioinfo/svaba-nf/blob/master/svaba.png)
 
